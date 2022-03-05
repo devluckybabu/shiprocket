@@ -1,5 +1,5 @@
 {
-  "name": "shiprockt",
+  "name": "shiprocket",
   "version": "1.0.6",
   "types": "./types/**/*.d.ts",
   "main": "index.ts",
