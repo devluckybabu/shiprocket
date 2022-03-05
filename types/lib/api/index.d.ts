@@ -7,7 +7,9 @@ declare class shiprocketConfig {
     private email;
     private password;
     constructor({ email, password }: options);
+    private post;
     private auth;
+    private get;
     getOrders: (options?: {
         per_page?: number | undefined;
         page?: number | undefined;
