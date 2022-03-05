@@ -2,7 +2,7 @@ import createOrder from "./createOrder";
 import { orderOptions } from "./data_types";
 import updateOrder from "./updateOrder";
 import getStatements from "./getStatements";
-
+const url = "https://apiv2.shiprocket.in/v1/external";
 interface options {
   email: string;
   password: string;
@@ -17,21 +17,39 @@ class shiprocketConfig {
     this.password = password
   };
 
-  private auth = () => {
+  private post = (path: string, data: object) => {
     return new Promise((resolve, reject) => {
-      fetch('https://apiv2.shiprocket.in/v1/external/auth/login', {
+      fetch(url + path, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'apllication/json',
-          'Accept': 'apllication/json'
-        },
-        body: JSON.stringify({ email: this.email, password: this.password })
-      }).then((res) => res.json()).then((result) => {
-        return resolve(result);
-      }).catch((error) => reject(error))
+        headers: { 'Content-Type': 'apllication/json', 'Accept': 'apllication/json' },
+        body: JSON.stringify(data)
+      }).then((res) => res.json())
+        .then((result) => {
+          return resolve(result);
+        }).catch((error) => reject(error));
     });
-  };
-
+  }
+  private auth = () => this.post('/auth/login', { email: this.email, password: this.password });
+  private get = (path: string) => {
+    return new Promise((resolve, reject) => {
+      this.auth().then((user: any) => {
+        if (user?.token) {
+          return fetch(url + path, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Bearer " + user?.token
+            }
+          }).then((res) => res.json())
+            .then((result) => resolve(result))
+            .catch((error) => reject(error))
+        } else {
+          return reject(user);
+        }
+      }).catch((error) => reject(error))
+    })
+  }
   getOrders = (options?: {
     per_page?: number;
     page?: number;
@@ -44,78 +62,39 @@ class shiprocketConfig {
     search?: string;
     pickup_location?: string;
   }) => {
-    return new Promise((resolve, reject) => {
-      this.auth().then((user: any) => {
-        const data = typeof options == 'object' ? options : {};
-        const full_url = Object.entries(data).map(([key, value]) => `${key}=${value}`).join();
-        const url = `https://apiv2.shiprocket.in/v1/external/orders?` + full_url?.split(',').join('&');
-        fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'apllication/json',
-            'Accept': 'apllication/json',
-            'Authorization': "Bearer " + user?.token
-          }
-        }).then((res) => res.json()).then((result) => {
-          return resolve(result);
-        }).catch((error) => reject(error))
-      }).catch((error) => reject(error))
-    })
-  };
+    const data = options && typeof options == 'object' ? options : {};
+    const full_url = Object.entries(data).map(([key, value]) => `${key}=${value}`).join("&");
+    const path = `/orders?` + full_url;
+    return this.get(path);
+  }
 
 
-  getOrder = (id: string) => {
-    return new Promise((resolve, reject) => {
-      this.auth().then((user: any) => {
-        const url = `https://apiv2.shiprocket.in/v1/external/orders/show/` + id;
-        fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'apllication/json',
-            'Accept': 'apllication/json',
-            'Authorization': "Bearer " + user?.token
-          }
-        }).then((res) => res.json()).then((result) => {
-          return resolve(result);
-        }).catch((error) => reject(error))
-      }).catch((error) => reject(error))
-    })
-  };
+  /**
+   * 
+   * @param id string : e.g="432136546"
+   * @returns object
+   */
+  //get specific order
+  getOrder = (id: string) => this.get('/orders/show/' + id);
 
-
+  /**
+   * *
+   * @param options : { type: 'awb' | 'shipment' | string, id: string }
+   * @returns object
+   */
+  ///get tracking data
   getTracking = (options: { type: 'awb' | 'shipment' | string, id: string }) => {
-    return new Promise((resolve, reject) => {
-      this.auth().then((user: any) => {
-        const url = `https://apiv2.shiprocket.in/v1/external/courier/track/${options.type}/${options.id}`
-        fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': "Bearer " + user?.token
-          }
-        }).then((res) => res.json()).then((result) => {
-          return resolve(result?.tracking_data);
-        }).catch((error) => reject(error))
-      }).catch((error) => reject(error))
-    })
+    return this.get(`/courier/track/${options.type}/${options.id}`);
   };
   createOrder = (options: orderOptions) => createOrder({ ...options, auth: this.auth() });
   updateOrder = (options: orderOptions) => updateOrder({ ...options, auth: this.auth() });
-  getLocality = (pincode: number) => {
-    return new Promise((resolve, reject) => {
-      this.auth().then((user: any) => {
-        fetch(`https://apiv2.shiprocket.in/v1/external/open/postcode/details?postcode=${pincode}`, {
-          method: 'GET',
-          headers: {
-            "Accept": "application/json",
-            "Conentent-Type": "application/json",
-            "Authorization": "Bearer " + user?.token,
-          }
-        }).then((res) => res.json()).then((result) => { resolve(result?.postcode_details) }).catch((error) => reject(error)).catch((error) => reject(error))
-      }).catch((error) => reject(error))
-    })
-  }
+
+  /**
+   * 
+   * @param pincode number | string
+   * @returns object
+   */
+  getLocality = (pincode: number) => this.get(`/open/postcode/details?postcode=${pincode}`);
 
   getStatements = (options?: { per_page?: number; page?: number; to?: string; from?: string }) => getStatements({ auth: this.auth(), ...options });
 };
