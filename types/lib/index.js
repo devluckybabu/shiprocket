@@ -5,8 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const createOrder_1 = __importDefault(require("./createOrder"));
 const updateOrder_1 = __importDefault(require("./updateOrder"));
-const getStatements_1 = __importDefault(require("./getStatements"));
-const axios_1 = __importDefault(require("axios"));
 const url = "https://apiv2.shiprocket.in/v1/external";
 const paramUrl = (options) => {
     if (options && typeof options == "object") {
@@ -20,25 +18,27 @@ class shiprocketConfig {
     constructor(user) {
         this.auth = () => {
             return new Promise((resolve, reject) => {
-                axios_1.default.post(url + '/auth/login', {
+                fetch(url + '/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'apllication/json', 'Accept': 'apllication/json' },
                     body: JSON.stringify({ email: this.email, password: this.password })
-                }).then((result) => resolve(result === null || result === void 0 ? void 0 : result.data)).catch((error) => reject(error));
+                }).then((res) => res.json()).
+                    then((result) => resolve(result)).catch((error) => reject(error));
             });
         };
         this.post = (path, data) => {
             return new Promise((resolve, reject) => {
                 this.auth().then((user) => {
                     if (user === null || user === void 0 ? void 0 : user.token) {
-                        axios_1.default.post(url + path, data, {
+                        fetch(url + path, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'apllication/json',
                                 'Accept': 'apllication/json',
                                 "Authorization": "Bearer " + (user === null || user === void 0 ? void 0 : user.token)
-                            }
-                        }).then((result) => resolve(result === null || result === void 0 ? void 0 : result.data)).catch((error) => reject(error));
+                            },
+                            body: JSON.stringify(data)
+                        }).then((res) => res.json()).then((result) => resolve(result)).catch((error) => reject(error));
                     }
                     else
                         return reject(user);
@@ -49,18 +49,18 @@ class shiprocketConfig {
             return new Promise((resolve, reject) => {
                 this.auth().then((user) => {
                     if (user === null || user === void 0 ? void 0 : user.token) {
-                        axios_1.default.get(url + path, {
+                        fetch(url + path, {
                             method: "GET",
                             headers: {
                                 "Content-Type": "application/json",
                                 "Accept": "application/json",
                                 "Authorization": "Bearer " + (user === null || user === void 0 ? void 0 : user.token)
                             }
-                        }).then((result) => resolve(result === null || result === void 0 ? void 0 : result.data)).catch((error) => reject(error));
+                        }).then((res) => res.json())
+                            .then((result) => resolve(result)).catch((error) => reject(error));
                     }
-                    else {
+                    else
                         return reject(user);
-                    }
                 }).catch((error) => reject(error));
             });
         };
@@ -99,7 +99,10 @@ class shiprocketConfig {
             const path = "/courier/serviceability/" + paramUrl(parmas);
             return this.get(path);
         };
-        this.getStatements = (options) => (0, getStatements_1.default)(Object.assign({ auth: this.auth() }, options));
+        this.getStatements = (options) => {
+            const path = '/account/details/statement?' + paramUrl(options);
+            return this.get(path);
+        };
         this.getWalletBalance = () => this.get('/account/details/wallet-balance');
         this.getChannels = () => this.get('/channels');
         this.getPickupLocations = () => this.get('/settings/company/pickup');

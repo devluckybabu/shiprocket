@@ -67,7 +67,6 @@ export interface orderOptions {
     weight: number;
     payment_method: "Prepaid" | "COD";
 }
-export declare const replaceAll: (text: string, separater: string, replacer: string) => string;
 export interface ProductOptions {
     name: string;
     category_code: 'default' | string;
