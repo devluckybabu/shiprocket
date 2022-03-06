@@ -65,14 +65,6 @@ export interface orderOptions {
   payment_method: "Prepaid" | "COD";
 };
 
-export const replaceAll = (text: string, separater: string, replacer: string) => {
-  if (text?.length && typeof text == "string") {
-    const new_text = text.split(separater).join(replacer);
-    return new_text;
-  };
-  return '';
-};
-
 export interface ProductOptions {
   name: string;
   category_code: 'default' | string;
