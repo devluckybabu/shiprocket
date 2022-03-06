@@ -7,9 +7,16 @@ const createOrder_1 = __importDefault(require("./createOrder"));
 const updateOrder_1 = __importDefault(require("./updateOrder"));
 const getStatements_1 = __importDefault(require("./getStatements"));
 const url = "https://apiv2.shiprocket.in/v1/external";
-;
+const paramUrl = (options) => {
+    if (options && typeof options == "object") {
+        const params = Object.entries(options).map(([key, vlaue]) => `${key}=${vlaue}`).join("&");
+        return params;
+    }
+    ;
+    return '';
+};
 class shiprocketConfig {
-    constructor({ email, password }) {
+    constructor(user) {
         this.post = (path, data) => {
             return new Promise((resolve, reject) => {
                 fetch(url + path, {
@@ -45,9 +52,8 @@ class shiprocketConfig {
             });
         };
         this.getOrders = (options) => {
-            const data = options && typeof options == 'object' ? options : {};
-            const full_url = Object.entries(data).map(([key, value]) => `${key}=${value}`).join("&");
-            const path = `/orders?` + full_url;
+            const params = paramUrl(options);
+            const path = `/orders?` + params;
             return this.get(path);
         };
         this.getOrder = (id) => this.get('/orders/show/' + id);
@@ -56,10 +62,37 @@ class shiprocketConfig {
         };
         this.createOrder = (options) => (0, createOrder_1.default)(Object.assign(Object.assign({}, options), { auth: this.auth() }));
         this.updateOrder = (options) => (0, updateOrder_1.default)(Object.assign(Object.assign({}, options), { auth: this.auth() }));
+        this.getProducts = (options) => {
+            const path = '/products?' + paramUrl(options);
+            return this.get(path);
+        };
+        this.getLists = (options) => {
+            const path = '/listings?' + paramUrl(options);
+            return this.get(path);
+        };
+        this.getProduct = (id) => this.get('/products/show/' + id);
+        this.addProduct = (data) => this.post('/products', data);
         this.getLocality = (pincode) => this.get(`/open/postcode/details?postcode=${pincode}`);
+        this.getServiceability = (options) => {
+            const { pickup_pincode, delivery_pincode, cod, weight, hieght, breadth, mode, is_return, price, orderId } = options;
+            const parmas = {
+                pickup_postcode: pickup_pincode,
+                delivery_postcode: delivery_pincode,
+                cod: cod == true ? 1 : 0,
+                hieght, weight, is_return,
+                mode, breadth, orderId,
+                declare_value: price
+            };
+            const path = "/courier/serviceability/" + paramUrl(parmas);
+            return this.get(path);
+        };
         this.getStatements = (options) => (0, getStatements_1.default)(Object.assign({ auth: this.auth() }, options));
-        this.email = email;
-        this.password = password;
+        this.getWalletBalance = () => this.get('/account/details/wallet-balance');
+        this.getChannels = () => this.get('/channels');
+        this.getPickupLocations = () => this.get('/settings/company/pickup');
+        this.addPickupLocation = (data) => this.post('/settings/company/addpickup', data);
+        this.email = user.email;
+        this.password = user.password;
     }
     ;
 }

@@ -1,15 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const data_types_1 = __importDefault(require("./data_types"));
 const getStatements = (options) => {
     return new Promise((resolve, reject) => {
         options === null || options === void 0 ? void 0 : options.auth.then((user) => {
             const data = typeof options == 'object' ? options : {};
-            const full_url = Object.entries(data).map(([key, value]) => `${key}=${value}`).join();
-            const url = `https://apiv2.shiprocket.in/v1/external/account/details/statement?` + (0, data_types_1.default)(full_url, ',', '&');
+            const full_url = Object.entries(data).map(([key, value]) => `${key}=${value}`).join('&');
+            const url = `https://apiv2.shiprocket.in/v1/external/account/details/statement?` + full_url;
             fetch(url, {
                 method: 'GET',
                 headers: {

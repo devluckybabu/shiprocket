@@ -12,5 +12,4 @@ const replaceAll = (text, separater, replacer) => {
     return '';
 };
 exports.replaceAll = replaceAll;
-exports.default = exports.replaceAll;
 //# sourceMappingURL=data_types.js.map

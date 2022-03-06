@@ -1,5 +1,4 @@
-import replaceAll from "./data_types";
-
+"use strict"
 const getStatements = (options?: {
   per_page?: number;
   page?: number;
@@ -10,8 +9,8 @@ const getStatements = (options?: {
   return new Promise((resolve, reject) => {
     options?.auth.then((user: any) => {
       const data = typeof options == 'object' ? options : {};
-      const full_url = Object.entries(data).map(([key, value]) => `${key}=${value}`).join();
-      const url = `https://apiv2.shiprocket.in/v1/external/account/details/statement?` + replaceAll(full_url, ',', '&');
+      const full_url = Object.entries(data).map(([key, value]) => `${key}=${value}`).join('&');
+      const url = `https://apiv2.shiprocket.in/v1/external/account/details/statement?` + full_url;
       fetch(url, {
         method: 'GET',
         headers: {

@@ -72,4 +72,27 @@ export const replaceAll = (text: string, separater: string, replacer: string) =>
   };
   return '';
 };
-export default replaceAll;
+
+export interface ProductOptions {
+  name: string;
+  category_code: 'default' | string;
+  hsn?: string;
+  type: "single" | "multiple";
+  sku: string;
+  quantity: number;
+  description?: string;
+  brand?: string;
+  size?: string;
+  weight?: number;
+  length?: number;
+  width?: number;
+  height?: number;
+  ean?: string;
+  upc?: string;
+  color?: string;
+  imei_serialnumber?: string;
+  cost_price?: number;
+  mrp?: number;
+  status?: boolean;
+  image_ur?: string;
+} 
