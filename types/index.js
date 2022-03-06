@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const api_1 = __importDefault(require("./lib/api"));
-const shiprocket = { config: api_1.default };
+const lib_1 = __importDefault(require("./lib"));
+const shiprocket = { config: lib_1.default };
 exports.default = shiprocket;
 //# sourceMappingURL=index.js.map

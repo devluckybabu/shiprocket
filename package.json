@@ -1,20 +1,16 @@
 {
   "name": "shiprocket",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "types": "./types/**/*.d.ts",
   "main": "index.ts",
   "scripts": {
     "build": "cd types && del * && tsc"
   },
   "dependencies": {
-    "axios": "^0.26.0",
-    "react": "17.0.2",
-    "react-native": "0.67.3"
+    "axios": "^0.26.0"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*",
-    "typescript": "*"
+    "axios": "*"
   },
   "repository": {
     "type": "git",

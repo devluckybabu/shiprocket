@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const createOrder_1 = __importDefault(require("./createOrder"));
 const updateOrder_1 = __importDefault(require("./updateOrder"));
 const getStatements_1 = __importDefault(require("./getStatements"));
+const axios_1 = __importDefault(require("axios"));
 const url = "https://apiv2.shiprocket.in/v1/external";
 const paramUrl = (options) => {
     if (options && typeof options == "object") {
@@ -17,33 +18,45 @@ const paramUrl = (options) => {
 };
 class shiprocketConfig {
     constructor(user) {
-        this.post = (path, data) => {
+        this.auth = () => {
             return new Promise((resolve, reject) => {
-                fetch(url + path, {
+                axios_1.default.post(url + '/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'apllication/json', 'Accept': 'apllication/json' },
-                    body: JSON.stringify(data)
-                }).then((res) => res.json())
-                    .then((result) => {
-                    return resolve(result);
+                    body: JSON.stringify({ email: this.email, password: this.password })
+                }).then((result) => resolve(result === null || result === void 0 ? void 0 : result.data)).catch((error) => reject(error));
+            });
+        };
+        this.post = (path, data) => {
+            return new Promise((resolve, reject) => {
+                this.auth().then((user) => {
+                    if (user === null || user === void 0 ? void 0 : user.token) {
+                        axios_1.default.post(url + path, data, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'apllication/json',
+                                'Accept': 'apllication/json',
+                                "Authorization": "Bearer " + (user === null || user === void 0 ? void 0 : user.token)
+                            }
+                        }).then((result) => resolve(result === null || result === void 0 ? void 0 : result.data)).catch((error) => reject(error));
+                    }
+                    else
+                        return reject(user);
                 }).catch((error) => reject(error));
             });
         };
-        this.auth = () => this.post('/auth/login', { email: this.email, password: this.password });
         this.get = (path) => {
             return new Promise((resolve, reject) => {
                 this.auth().then((user) => {
                     if (user === null || user === void 0 ? void 0 : user.token) {
-                        return fetch(url + path, {
+                        axios_1.default.get(url + path, {
                             method: "GET",
                             headers: {
                                 "Content-Type": "application/json",
                                 "Accept": "application/json",
                                 "Authorization": "Bearer " + (user === null || user === void 0 ? void 0 : user.token)
                             }
-                        }).then((res) => res.json())
-                            .then((result) => resolve(result))
-                            .catch((error) => reject(error));
+                        }).then((result) => resolve(result === null || result === void 0 ? void 0 : result.data)).catch((error) => reject(error));
                     }
                     else {
                         return reject(user);

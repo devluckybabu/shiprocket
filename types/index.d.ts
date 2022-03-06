@@ -1,4 +1,4 @@
-import shiprocketConfig from "./lib/api";
+import shiprocketConfig from "./lib";
 declare const shiprocket: {
     config: typeof shiprocketConfig;
 };
