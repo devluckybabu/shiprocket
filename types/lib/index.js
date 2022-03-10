@@ -65,20 +65,45 @@ class shiprocketConfig {
             });
         };
         this.getOrders = (options) => {
-            const params = paramUrl(options);
-            const path = `/orders?` + params;
-            return this.get(path);
+            if (options === null || options === void 0 ? void 0 : options.orderId) {
+                const path = '/orders/show/' + (options === null || options === void 0 ? void 0 : options.orderId);
+                return this.get(path);
+            }
+            else {
+                const params = paramUrl(options);
+                const path = `/orders?` + params;
+                return this.get(path);
+            }
         };
         this.getOrder = (id) => this.get('/orders/show/' + id);
         this.getTracking = (options) => {
+            if (options.type == "orderId") {
+                return this.get(`/courier/track?order_id=${options.id}`);
+            }
+            ;
             return this.get(`/courier/track/${options.type}/${options.id}`);
         };
         this.createOrder = (options) => (0, createOrder_1.default)(Object.assign(Object.assign({}, options), { auth: this.auth() }));
         this.updateOrder = (options) => (0, updateOrder_1.default)(Object.assign(Object.assign({}, options), { auth: this.auth() }));
         this.getProducts = (options) => {
-            const path = '/products?' + paramUrl(options);
-            return this.get(path);
+            if (options === null || options === void 0 ? void 0 : options.productId) {
+                const path = '/products/show/' + (options === null || options === void 0 ? void 0 : options.productId);
+                return this.get(path);
+            }
+            else {
+                const path = '/products?' + paramUrl(options);
+                return this.get(path);
+            }
         };
+        this.getCountries = (countryId) => {
+            if (countryId)
+                return this.get('/countries/show/' + countryId);
+            else
+                return this.get('/countries');
+        };
+        this.getAllZones = (countryId) => this.get('/countries/show/' + countryId);
+        this.getDiscrepancy = () => this.get('/billing/discrepancy');
+        this.checkImport = (importId) => this.get(`/errors/${importId}/check`);
         this.getLists = (options) => {
             const path = '/listings?' + paramUrl(options);
             return this.get(path);
@@ -105,6 +130,16 @@ class shiprocketConfig {
         };
         this.getWalletBalance = () => this.get('/account/details/wallet-balance');
         this.getChannels = () => this.get('/channels');
+        this.getNDR = (options) => {
+            if (options === null || options === void 0 ? void 0 : options.awb) {
+                return this.get('/ndr/show/' + options.awb);
+            }
+            else {
+                const path = '/ndr/all?' + paramUrl(options);
+                return this.get(path);
+            }
+        };
+        this.ndrAction = (options) => this.post(`/ndr/${options.awb}/action`, { acction: options.action, comments: options.comments });
         this.getPickupLocations = () => this.get('/settings/company/pickup');
         this.addPickupLocation = (data) => this.post('/settings/company/addpickup', data);
         this.email = user.email;

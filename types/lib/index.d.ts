@@ -1,4 +1,5 @@
 import { orderOptions, ProductOptions } from "./data_types";
+declare type awb_number = string | number;
 declare class shiprocketConfig {
     private email;
     private password;
@@ -20,11 +21,12 @@ declare class shiprocketConfig {
         filter_by?: string | undefined;
         search?: string | undefined;
         pickup_location?: string | undefined;
+        orderId?: string | number | undefined;
     } | undefined) => Promise<unknown>;
     getOrder: (id: string) => Promise<unknown>;
     getTracking: (options: {
-        type: 'awb' | 'shipment' | string;
-        id: string;
+        type: 'awb' | 'shipment' | 'orderId';
+        id: string | number;
     }) => Promise<unknown>;
     createOrder: (options: orderOptions) => Promise<unknown>;
     updateOrder: (options: orderOptions) => Promise<unknown>;
@@ -35,7 +37,12 @@ declare class shiprocketConfig {
         sort_by?: string | undefined;
         filter?: string | undefined;
         filter_by?: string | undefined;
+        productId?: string | number | undefined;
     } | undefined) => Promise<unknown>;
+    getCountries: (countryId?: string | number | undefined) => Promise<unknown>;
+    getAllZones: (countryId: string | number) => Promise<unknown>;
+    getDiscrepancy: () => Promise<unknown>;
+    checkImport: (importId: string | number) => Promise<unknown>;
     getLists: (options?: {
         per_page?: number | undefined;
         page?: number | undefined;
@@ -44,9 +51,9 @@ declare class shiprocketConfig {
         filter?: string | undefined;
         filter_by?: string | undefined;
     } | undefined) => Promise<unknown>;
-    getProduct: (id: string) => Promise<unknown>;
+    getProduct: (id: string | number) => Promise<unknown>;
     addProduct: (data: ProductOptions) => Promise<unknown>;
-    getLocality: (pincode: number) => Promise<unknown>;
+    getLocality: (pincode: number | string) => Promise<unknown>;
     getServiceability: (options: {
         pickup_pincode: string;
         delivery_pincode: string;
@@ -67,6 +74,19 @@ declare class shiprocketConfig {
     } | undefined) => Promise<unknown>;
     getWalletBalance: () => Promise<unknown>;
     getChannels: () => Promise<unknown>;
+    getNDR: (options?: {
+        per_page?: number | undefined;
+        page?: number | undefined;
+        to?: string | undefined;
+        from?: string | undefined;
+        search?: awb_number | undefined;
+        awb?: string | undefined;
+    } | undefined) => Promise<unknown>;
+    ndrAction: (options: {
+        awb: number | string;
+        action: 'return' | 're-attempt';
+        comments: string;
+    }) => Promise<unknown>;
     getPickupLocations: () => Promise<unknown>;
     addPickupLocation: (data: {
         pickup_location: string;

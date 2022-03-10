@@ -3,6 +3,7 @@ import { orderOptions, ProductOptions } from "./data_types";
 import updateOrder from "./updateOrder";
 const url = "https://apiv2.shiprocket.in/v1/external";
 
+type awb_number = string | number;
 const paramUrl = (options?: object) => {
   if (options && typeof options == "object") {
     const params = Object.entries(options).map(([key, vlaue]) => `${key}=${vlaue}`).join("&");
@@ -100,7 +101,10 @@ class shiprocketConfig {
    * @returns object
    */
   ///get tracking data
-  getTracking = (options: { type: 'awb' | 'shipment' | string, id: string | number }) => {
+  getTracking = (options: { type: 'awb' | 'shipment' | 'orderId', id: string | number }) => {
+    if (options.type == "orderId") {
+      return this.get(`/courier/track?order_id=${options.id}`);
+    };
     return this.get(`/courier/track/${options.type}/${options.id}`);
   };
   createOrder = (options: orderOptions) => createOrder({ ...options, auth: this.auth() });
@@ -124,6 +128,17 @@ class shiprocketConfig {
       return this.get(path);
     }
   };
+
+
+  getCountries = (countryId?: string | number) => {
+    if (countryId) return this.get('/countries/show/' + countryId);
+    else return this.get('/countries');
+  }
+  getAllZones = (countryId: string | number) => this.get('/countries/show/' + countryId);
+
+  getDiscrepancy = () => this.get('/billing/discrepancy');
+  checkImport = (importId: string | number) => this.get(`/errors/${importId}/check`);
+
   getLists = (
     options?: {
       per_page?: number;
@@ -196,6 +211,27 @@ class shiprocketConfig {
   getWalletBalance = () => this.get('/account/details/wallet-balance');
   ///get channels
   getChannels = () => this.get('/channels');
+  getNDR = (options?: {
+    per_page?: number;
+    page?: number;
+    to?: string;
+    from?: string;
+    search?: awb_number;
+    awb?: string;
+  }) => {
+    if (options?.awb) {
+      return this.get('/ndr/show/' + options.awb)
+    } else {
+      const path = '/ndr/all?' + paramUrl(options);
+      return this.get(path);
+    }
+  };
+  ndrAction = (
+    options: {
+      awb: number | string;
+      action: 'return' | 're-attempt';
+      comments: string;
+    }) => this.post(`/ndr/${options.awb}/action`, { acction: options.action, comments: options.comments });
   ///get pickup locations
   getPickupLocations = () => this.get('/settings/company/pickup');
 
