@@ -28,7 +28,8 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": false,
-    "skipLibCheck": false
+    "skipLibCheck": false,
+    "alwaysStrict": true
   },
   "exclude": [
     "node_modules"

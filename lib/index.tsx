@@ -1,4 +1,3 @@
-"use strict"
 import createOrder from "./createOrder";
 import { orderOptions, ProductOptions } from "./data_types";
 import updateOrder from "./updateOrder";
@@ -76,10 +75,16 @@ class shiprocketConfig {
     filter_by?: string;
     search?: string;
     pickup_location?: string;
+    orderId?: string | number;
   }) => {
-    const params = paramUrl(options);
-    const path = `/orders?` + params;
-    return this.get(path);
+    if (options?.orderId) {
+      const path = '/orders/show/' + options?.orderId;
+      return this.get(path);
+    } else {
+      const params = paramUrl(options);
+      const path = `/orders?` + params;
+      return this.get(path);
+    }
   };
 
 
@@ -95,7 +100,7 @@ class shiprocketConfig {
    * @returns object
    */
   ///get tracking data
-  getTracking = (options: { type: 'awb' | 'shipment' | string, id: string }) => {
+  getTracking = (options: { type: 'awb' | 'shipment' | string, id: string | number }) => {
     return this.get(`/courier/track/${options.type}/${options.id}`);
   };
   createOrder = (options: orderOptions) => createOrder({ ...options, auth: this.auth() });
@@ -109,9 +114,15 @@ class shiprocketConfig {
       sort_by?: string;
       filter?: string;
       filter_by?: string;
+      productId?: string | number;
     }) => {
-    const path = '/products?' + paramUrl(options);
-    return this.get(path);
+    if (options?.productId) {
+      const path = '/products/show/' + options?.productId;
+      return this.get(path);
+    } else {
+      const path = '/products?' + paramUrl(options);
+      return this.get(path);
+    }
   };
   getLists = (
     options?: {
@@ -129,7 +140,7 @@ class shiprocketConfig {
    * @param id required (string)
    * @returns object
    */
-  getProduct = (id: string) => this.get('/products/show/' + id);
+  getProduct = (id: string | number) => this.get('/products/show/' + id);
 
   addProduct = (data: ProductOptions) => this.post('/products', data);
 
@@ -138,7 +149,7 @@ class shiprocketConfig {
    * @param pincode required (number | string)
    * @returns object
    */
-  getLocality = (pincode: number) => this.get(`/open/postcode/details?postcode=${pincode}`);
+  getLocality = (pincode: number | string) => this.get(`/open/postcode/details?postcode=${pincode}`);
 
   getServiceability = (
     options: {
