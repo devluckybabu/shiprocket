@@ -1,10 +1,10 @@
 {
   "name": "shiprocket",
-  "version": "1.1.2",
-  "types": "./types/**/*.d.ts",
-  "main": "index.ts",
+  "version": "1.1.3",
+  "types": "./lib/**/*.d.ts",
+  "main": "index.js",
   "scripts": {
-    "build": "cd types && del * && tsc"
+    "build": "cd lib && del * && tsc"
   },
   "dependencies": {},
   "repository": {

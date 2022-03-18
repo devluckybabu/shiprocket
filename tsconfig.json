@@ -11,8 +11,9 @@
       "ES2018"
     ],
     "declaration": true,
-    "sourceMap": true,
-    "outDir": "./types",
+    "sourceMap": false,
+    "outDir": "./lib",
+    "rootDir": "./src",
     "allowJs": true,
     "checkJs": true,
     "removeComments": true,
@@ -35,9 +36,6 @@
     "node_modules"
   ],
   "include": [
-    "./lib/**/*.tsx",
-    "./lib/**/*.ts",
-    "./*.tsx",
-    "./*.ts"
+    "./src"
   ]
 }
