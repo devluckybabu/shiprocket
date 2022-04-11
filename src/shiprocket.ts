@@ -1,6 +1,5 @@
 import createOrder from "./createOrder";
-import { orderOptions, ProductOptions } from "./data_types";
-import updateOrder from "./updateOrder";
+import { options, ProductOptions } from "./types";
 const url = "https://apiv2.shiprocket.in/v1/external";
 
 type awb_number = string | number;
@@ -59,8 +58,7 @@ class shiprocketConfig {
               "Accept": "application/json",
               "Authorization": "Bearer " + user?.token
             }
-          }).then((res) => res.json())
-            .then((result) => resolve(result)).catch((error) => reject(error))
+          }).then((res) => res.json()).then((result) => resolve(result)).catch((error) => reject(error))
         } else return reject(user);
       }).catch((error) => reject(error));
     });
@@ -91,14 +89,14 @@ class shiprocketConfig {
 
   /**
    * @param id string : e.g="432136546"
-   * @returns object
+   * @return object
    */
   //get specific order
   getOrder = (id: string) => this.get('/orders/show/' + id);
 
   /**
-   * @param options : { type: 'awb' | 'shipment' | string, id: string }
-   * @returns object
+   * @param options : { type: 'awb' | 'shipment' | 'Order Id, id: string }
+   * @return object
    */
   ///get tracking data
   getTracking = (options: { type: 'awb' | 'shipment' | 'orderId', id: string | number }) => {
@@ -107,8 +105,8 @@ class shiprocketConfig {
     };
     return this.get(`/courier/track/${options.type}/${options.id}`);
   };
-  createOrder = (options: orderOptions) => createOrder({ ...options, auth: this.auth() });
-  updateOrder = (options: orderOptions) => updateOrder({ ...options, auth: this.auth() });
+  createOrder = (data: options) => createOrder({ auth: this.auth(), data });
+  // updateOrder = (options: orderOptions) => updateOrder({ auth: this.auth(), data: options });
 
   getProducts = (
     options?: {

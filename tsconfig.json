@@ -11,9 +11,8 @@
       "ES2018"
     ],
     "declaration": true,
-    "sourceMap": false,
-    "outDir": "./lib",
-    "rootDir": "./src",
+    "sourceMap": true,
+    "outDir": "./types",
     "allowJs": true,
     "checkJs": true,
     "removeComments": true,
@@ -36,6 +35,6 @@
     "node_modules"
   ],
   "include": [
-    "./src"
+    "src"
   ]
 }

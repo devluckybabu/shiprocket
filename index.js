@@ -1,4 +1,2 @@
-import shiprocketConfig from "./lib";
-const shiprocket = { config: shiprocketConfig };
-//export as default
-export default shiprocket;
+import shiprocket from './types';
+export default shiprocket

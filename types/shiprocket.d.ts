@@ -1,4 +1,4 @@
-import { orderOptions, ProductOptions } from "./data_types";
+import { options, ProductOptions } from "./types";
 declare type awb_number = string | number;
 declare class shiprocketConfig {
     private email;
@@ -28,8 +28,7 @@ declare class shiprocketConfig {
         type: 'awb' | 'shipment' | 'orderId';
         id: string | number;
     }) => Promise<unknown>;
-    createOrder: (options: orderOptions) => Promise<unknown>;
-    updateOrder: (options: orderOptions) => Promise<unknown>;
+    createOrder: (data: options) => Promise<unknown>;
     getProducts: (options?: {
         per_page?: number | undefined;
         page?: number | undefined;

@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const createOrder_1 = __importDefault(require("./createOrder"));
-const updateOrder_1 = __importDefault(require("./updateOrder"));
 const url = "https://apiv2.shiprocket.in/v1/external";
 const paramUrl = (options) => {
     if (options && typeof options == "object") {
@@ -56,8 +55,7 @@ class shiprocketConfig {
                                 "Accept": "application/json",
                                 "Authorization": "Bearer " + (user === null || user === void 0 ? void 0 : user.token)
                             }
-                        }).then((res) => res.json())
-                            .then((result) => resolve(result)).catch((error) => reject(error));
+                        }).then((res) => res.json()).then((result) => resolve(result)).catch((error) => reject(error));
                     }
                     else
                         return reject(user);
@@ -83,8 +81,7 @@ class shiprocketConfig {
             ;
             return this.get(`/courier/track/${options.type}/${options.id}`);
         };
-        this.createOrder = (options) => (0, createOrder_1.default)(Object.assign(Object.assign({}, options), { auth: this.auth() }));
-        this.updateOrder = (options) => (0, updateOrder_1.default)(Object.assign(Object.assign({}, options), { auth: this.auth() }));
+        this.createOrder = (data) => (0, createOrder_1.default)({ auth: this.auth(), data });
         this.getProducts = (options) => {
             if (options === null || options === void 0 ? void 0 : options.productId) {
                 const path = '/products/show/' + (options === null || options === void 0 ? void 0 : options.productId);
@@ -149,3 +146,4 @@ class shiprocketConfig {
 }
 ;
 exports.default = shiprocketConfig;
+//# sourceMappingURL=shiprocket.js.map
