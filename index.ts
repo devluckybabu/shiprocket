@@ -1,2 +1,2 @@
-import shiprocket from './types';
-export default { config: shiprocket };
+import shiprockt from './types';
+export default { config: shiprockt };

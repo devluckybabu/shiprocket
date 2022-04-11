@@ -13,7 +13,6 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "./types",
-    "rootDir": "./src",
     "allowJs": true,
     "checkJs": true,
     "removeComments": true,
@@ -33,7 +32,8 @@
     "alwaysStrict": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "index.ts"
   ],
   "include": [
     "src"
