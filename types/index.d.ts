@@ -1,6 +1,6 @@
 import { options, ProductOptions } from "./types";
 declare type awb_number = string | number;
-declare class shiprocketConfig {
+declare class shiprocket {
     private email;
     private password;
     constructor(user: {
@@ -100,4 +100,4 @@ declare class shiprocketConfig {
         pin_code: string;
     }) => Promise<unknown>;
 }
-export default shiprocketConfig;
+export default shiprocket;

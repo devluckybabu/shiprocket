@@ -13,7 +13,7 @@ const paramUrl = (options) => {
     ;
     return '';
 };
-class shiprocketConfig {
+class shiprocket {
     constructor(user) {
         this.auth = () => {
             return new Promise((resolve, reject) => {
@@ -145,5 +145,5 @@ class shiprocketConfig {
     ;
 }
 ;
-exports.default = shiprocketConfig;
+exports.default = shiprocket;
 //# sourceMappingURL=index.js.map

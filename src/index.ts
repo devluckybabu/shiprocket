@@ -11,7 +11,7 @@ const paramUrl = (options?: object) => {
   return '';
 };
 
-class shiprocketConfig {
+class shiprocket {
   private email: string;
   private password: string;
   constructor(user: { email: string; password: string }) {
@@ -249,4 +249,4 @@ class shiprocketConfig {
     }) => this.post('/settings/company/addpickup', data);
 };
 
-export default shiprocketConfig;
+export default shiprocket;
