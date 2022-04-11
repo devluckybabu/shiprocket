@@ -1,6 +1,6 @@
 
 export type address = {
-  firt_name: string;
+  first_name: string;
   last_name: string;
   phone: number;
   email: string;
