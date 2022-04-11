@@ -1,8 +1,9 @@
 {
   "name": "shiprocket",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "types": "./types/**/*.d.ts",
-  "main": "index.js",
+  "description": "Shiprocket API for react native",
+  "main": "index.ts",
   "scripts": {
     "build": "cd types && del * && tsc"
   },

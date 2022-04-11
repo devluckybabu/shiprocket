@@ -13,6 +13,7 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "./types",
+    "rootDir": "./src",
     "allowJs": true,
     "checkJs": true,
     "removeComments": true,
