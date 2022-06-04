@@ -1,5 +1,5 @@
 import createOrder from "./createOrder";
-import { options, ProductOptions } from "./types";
+import { options, ProductOptions, serviceabilityOptions } from "./types";
 const url = "https://apiv2.shiprocket.in/v1/external";
 
 type awb_number = string | number;
@@ -164,19 +164,7 @@ class shiprocket {
    */
   getLocality = (pincode: number | string) => this.get(`/open/postcode/details?postcode=${pincode}`);
 
-  getServiceability = (
-    options: {
-      pickup_pincode: string;
-      delivery_pincode: string;
-      cod: boolean;
-      orderId?: string;
-      price?: number;
-      weight: number;
-      hieght: number;
-      breadth?: number;
-      mode?: 'Surface' | 'Air';
-      is_return?: boolean;
-    }) => {
+  getServiceability = (options: serviceabilityOptions) => {
     const {
       pickup_pincode,
       delivery_pincode,
@@ -192,7 +180,7 @@ class shiprocket {
       mode, breadth, orderId,
       declare_value: price
     };
-    const path = "/courier/serviceability/" + paramUrl(parmas);
+    const path = "/courier/serviceability?" + paramUrl(parmas);
     return this.get(path);
   };
   //get statements

@@ -71,4 +71,16 @@ export interface ProductOptions {
   mrp?: number;
   status?: boolean;
   image_ur?: string;
-} 
+};
+export interface serviceabilityOptions {
+  pickup_pincode: string;
+  delivery_pincode: string;
+  cod: boolean;
+  orderId?: string;
+  price?: number;
+  weight: number;
+  hieght: number;
+  breadth?: number;
+  mode: 'Surface' | 'Air';
+  is_return?: boolean;
+};

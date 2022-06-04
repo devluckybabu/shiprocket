@@ -118,7 +118,7 @@ class shiprocket {
                 mode, breadth, orderId,
                 declare_value: price
             };
-            const path = "/courier/serviceability/" + paramUrl(parmas);
+            const path = "/courier/serviceability?" + paramUrl(parmas);
             return this.get(path);
         };
         this.getStatements = (options) => {
