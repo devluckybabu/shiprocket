@@ -1,13 +1,15 @@
 {
   "name": "shiprocket",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "types": "./types/**/*.d.ts",
   "description": "Shiprocket API for react native",
   "main": "index.ts",
   "scripts": {
     "build": "cd types && del * && tsc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "axios": "^0.27.2"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/devluckybabu/shiprocket"

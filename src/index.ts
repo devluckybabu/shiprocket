@@ -1,3 +1,4 @@
+import axios from 'axios';
 import createOrder from "./createOrder";
 import { options, ProductOptions, serviceabilityOptions } from "./types";
 const url = "https://apiv2.shiprocket.in/v1/external";
@@ -21,12 +22,11 @@ class shiprocket {
 
   auth = () => {
     return new Promise((resolve, reject) => {
-      fetch(url + '/auth/login', {
+      axios.post(url + '/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'apllication/json', 'Accept': 'apllication/json' },
         body: JSON.stringify({ email: this.email, password: this.password })
-      }).then((res) => res.json()).
-        then((result) => resolve(result)).catch((error) => reject(error));
+      }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
     });
   };
 
@@ -34,15 +34,15 @@ class shiprocket {
     return new Promise((resolve, reject) => {
       this.auth().then((user: any) => {
         if (user?.token) {
-          fetch(url + path, {
+          axios.post(url + path, {
             method: 'POST',
             headers: {
               'Content-Type': 'apllication/json',
               'Accept': 'apllication/json',
               "Authorization": "Bearer " + user?.token
             },
-            body: JSON.stringify(data)
-          }).then((res) => res.json()).then((result) => resolve(result)).catch((error) => reject(error));
+            data: JSON.stringify(data)
+          }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
         } else return reject(user);
       }).catch((error) => reject(error));
     });
@@ -51,14 +51,14 @@ class shiprocket {
     return new Promise((resolve, reject) => {
       this.auth().then((user: any) => {
         if (user?.token) {
-          fetch(url + path, {
+          axios.get(url + path, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               "Accept": "application/json",
               "Authorization": "Bearer " + user?.token
             }
-          }).then((res) => res.json()).then((result) => resolve(result)).catch((error) => reject(error))
+          }).then(({ data: result }) => resolve(result)).catch((error) => reject(error))
         } else return reject(user);
       }).catch((error) => reject(error));
     });

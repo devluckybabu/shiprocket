@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = __importDefault(require("axios"));
 const createOrder_1 = __importDefault(require("./createOrder"));
 const url = "https://apiv2.shiprocket.in/v1/external";
 const paramUrl = (options) => {
@@ -17,27 +18,26 @@ class shiprocket {
     constructor(user) {
         this.auth = () => {
             return new Promise((resolve, reject) => {
-                fetch(url + '/auth/login', {
+                axios_1.default.post(url + '/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'apllication/json', 'Accept': 'apllication/json' },
                     body: JSON.stringify({ email: this.email, password: this.password })
-                }).then((res) => res.json()).
-                    then((result) => resolve(result)).catch((error) => reject(error));
+                }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
             });
         };
         this.post = (path, data) => {
             return new Promise((resolve, reject) => {
                 this.auth().then((user) => {
                     if (user === null || user === void 0 ? void 0 : user.token) {
-                        fetch(url + path, {
+                        axios_1.default.post(url + path, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'apllication/json',
                                 'Accept': 'apllication/json',
                                 "Authorization": "Bearer " + (user === null || user === void 0 ? void 0 : user.token)
                             },
-                            body: JSON.stringify(data)
-                        }).then((res) => res.json()).then((result) => resolve(result)).catch((error) => reject(error));
+                            data: JSON.stringify(data)
+                        }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
                     }
                     else
                         return reject(user);
@@ -48,14 +48,14 @@ class shiprocket {
             return new Promise((resolve, reject) => {
                 this.auth().then((user) => {
                     if (user === null || user === void 0 ? void 0 : user.token) {
-                        fetch(url + path, {
+                        axios_1.default.get(url + path, {
                             method: "GET",
                             headers: {
                                 "Content-Type": "application/json",
                                 "Accept": "application/json",
                                 "Authorization": "Bearer " + (user === null || user === void 0 ? void 0 : user.token)
                             }
-                        }).then((res) => res.json()).then((result) => resolve(result)).catch((error) => reject(error));
+                        }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
                     }
                     else
                         return reject(user);
