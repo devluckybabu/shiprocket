@@ -25,7 +25,7 @@ declare class shiprocket {
     }) => Promise<unknown>;
     getOrder: (id: string) => Promise<unknown>;
     getTracking: (options: {
-        type: 'awb' | 'shipment' | 'orderId';
+        type: 'awb' | 'shipment' | 'orderId' | string;
         id: string | number;
     }) => Promise<unknown>;
     createOrder: (data: options) => Promise<unknown>;

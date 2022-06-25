@@ -19,9 +19,13 @@ class shiprocket {
         this.auth = () => {
             return new Promise((resolve, reject) => {
                 axios_1.default.post(url + '/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'apllication/json', 'Accept': 'apllication/json' },
-                    body: JSON.stringify({ email: this.email, password: this.password })
+                    email: this.email,
+                    password: this.password
+                }, {
+                    headers: {
+                        'Content-Type': 'apllication/json',
+                        'Accept': 'apllication/json'
+                    },
                 }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
             });
         };
@@ -29,14 +33,12 @@ class shiprocket {
             return new Promise((resolve, reject) => {
                 this.auth().then((user) => {
                     if (user === null || user === void 0 ? void 0 : user.token) {
-                        axios_1.default.post(url + path, {
-                            method: 'POST',
+                        axios_1.default.post(url + path, data, {
                             headers: {
                                 'Content-Type': 'apllication/json',
                                 'Accept': 'apllication/json',
                                 "Authorization": "Bearer " + (user === null || user === void 0 ? void 0 : user.token)
-                            },
-                            data: JSON.stringify(data)
+                            }
                         }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
                     }
                     else
@@ -49,7 +51,6 @@ class shiprocket {
                 this.auth().then((user) => {
                     if (user === null || user === void 0 ? void 0 : user.token) {
                         axios_1.default.get(url + path, {
-                            method: "GET",
                             headers: {
                                 "Content-Type": "application/json",
                                 "Accept": "application/json",

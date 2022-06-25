@@ -23,9 +23,13 @@ class shiprocket {
   auth = () => {
     return new Promise((resolve, reject) => {
       axios.post(url + '/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'apllication/json', 'Accept': 'apllication/json' },
-        body: JSON.stringify({ email: this.email, password: this.password })
+        email: this.email,
+        password: this.password
+      }, {
+        headers: {
+          'Content-Type': 'apllication/json',
+          'Accept': 'apllication/json'
+        },
       }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
     });
   };
@@ -34,14 +38,12 @@ class shiprocket {
     return new Promise((resolve, reject) => {
       this.auth().then((user: any) => {
         if (user?.token) {
-          axios.post(url + path, {
-            method: 'POST',
+          axios.post(url + path, data, {
             headers: {
               'Content-Type': 'apllication/json',
               'Accept': 'apllication/json',
               "Authorization": "Bearer " + user?.token
-            },
-            data: JSON.stringify(data)
+            }
           }).then(({ data: result }) => resolve(result)).catch((error) => reject(error));
         } else return reject(user);
       }).catch((error) => reject(error));
@@ -52,7 +54,6 @@ class shiprocket {
       this.auth().then((user: any) => {
         if (user?.token) {
           axios.get(url + path, {
-            method: "GET",
             headers: {
               "Content-Type": "application/json",
               "Accept": "application/json",
@@ -99,7 +100,7 @@ class shiprocket {
    * @return object
    */
   ///get tracking data
-  getTracking = (options: { type: 'awb' | 'shipment' | 'orderId', id: string | number }) => {
+  getTracking = (options: { type: 'awb' | 'shipment' | 'orderId' | string, id: string | number }) => {
     if (options.type == "orderId") {
       return this.get(`/courier/track?order_id=${options.id}`);
     };
